@@ -60,3 +60,11 @@ Users must provide the following inputs in the `Inputs` folder:
 - Flexibility is provided for both presence and pseudo-absence points:
   - Add them manually to the `data` folder.
   - Let the code generate them automatically.
+
+## **How to use**
+- Clone this repo in your project folder
+- You will need to create a virtual environment in Python in your project folder
+- Then install all the required libraries, using pip install -r requirements.txt 
+- Then you will need to initialize a project on GEE, as we are using GEE API.
+- In the main function write the name of your project in ee.initialize(project={your project name})
+   
