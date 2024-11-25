@@ -17,14 +17,14 @@ def main():
     
     # # raw_occurrences = Presence_dataloader.load_raw_presence_data()   #uncomment if want to use gbif api to generate presence points
     
-    unique_presences = Presence_dataloader.load_unique_lon_lats()
-    presences_filtered_LULC = LULC_Filter.filter_by_lulc(unique_presences)
-    presence_data_with_features  = Features_extractor.add_features(presences_filtered_LULC)
-    pseudo_absence_points_with_features = Pseudo_absence.generate_pseudo_absences(presence_data_with_features)
+    # unique_presences = Presence_dataloader.load_unique_lon_lats()
+    # presences_filtered_LULC = LULC_Filter.filter_by_lulc(unique_presences)
+    # presence_data_with_features  = Features_extractor.add_features(presences_filtered_LULC)
+    # pseudo_absence_points_with_features = Pseudo_absence.generate_pseudo_absences(presence_data_with_features)
 
     X, y, coords, feature_names,sample_weights = Models.load_data()
     clf, X_test, y_test, y_pred, y_proba = Models.RandomForest(X,y)
-    prob_map, transform = generate_prob.predict_eco_region(clf)
+    # prob_map, transform = generate_prob.predict_eco_region(clf)
    
    
     # print(pseudo_absence_points_with_features.head(5))

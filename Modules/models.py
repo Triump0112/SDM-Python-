@@ -25,7 +25,7 @@ class Models:
         return 
     def load_data(self):
         presence_df = pd.read_csv('data/presence.csv')
-        absence_df = pd.read_csv('data/absence.csv')
+        absence_df = pd.read_csv('data/pseudo_absence.csv')
 
         # Extract coordinates and features
         presence_coords = presence_df[['longitude', 'latitude']].values
