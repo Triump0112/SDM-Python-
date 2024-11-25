@@ -6,6 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.linear_model import LogisticRegression
 from sklearn.impute import SimpleImputer
+import pdb 
 
 
 feature_cols = [
@@ -27,6 +28,7 @@ class Models:
         presence_df = pd.read_csv('data/presence.csv')
         absence_df = pd.read_csv('data/pseudo_absence.csv')
 
+
         # Extract coordinates and features
         presence_coords = presence_df[['longitude', 'latitude']].values
         absence_coords = absence_df[['longitude', 'latitude']].values
@@ -35,6 +37,8 @@ class Models:
 
 
         # Extract features
+        print(feature_cols)
+        print(presence_df.columns)
         presence_features = presence_df[feature_cols].values
         absence_features = absence_df[feature_cols].values
 
