@@ -1,0 +1,49 @@
+0: Rock and Ice
+1: Sundarbans mangroves
+2: Eastern Himalayan subalpine conifer forests
+3: Northeast Himalayan subalpine conifer forests
+4: North Tibetan Plateau-Kunlun Mountains alpine desert
+5: Central Tibetan Plateau alpine steppe
+6: Eastern Himalayan alpine shrub and meadows
+7: Eastern Himalayan broadleaf forests
+8: Northern Triangle temperate forests
+9: Northeast India-Myanmar pine forests
+10: Himalayan subtropical pine forests
+11: Nicobar Islands rain forests
+12: Andaman Islands rain forests
+13: Chin Hills-Arakan Yoma montane forests
+14: Maldives-Lakshadweep-Chagos Archipelago tropical moist forests
+15: Mizoram-Manipur-Kachin rain forests
+16: Himalayan subtropical broadleaf forests
+17: Meghalaya subtropical forests
+18: Brahmaputra Valley semi-evergreen forests
+19: Lower Gangetic Plains moist deciduous forests
+20: Sundarbans freshwater swamp forests
+21: Terai-Duar savanna and grasslands
+22: Central Deccan Plateau dry deciduous forests
+23: Chhota-Nagpur dry deciduous forests
+24: East Deccan dry-evergreen forests
+25: Khathiar-Gir dry deciduous forests
+26: Narmada Valley dry deciduous forests
+27: North Deccan dry deciduous forests
+28: South Deccan Plateau dry deciduous forests
+29: Western Himalayan broadleaf forests
+30: Western Himalayan subalpine conifer forests
+31: Rann of Kutch seasonal salt marsh
+32: Western Himalayan alpine shrub and meadows
+33: Karakoram-West Tibetan Plateau alpine steppe
+34: Northwestern Himalayan alpine shrub and meadows
+35: Deccan thorn scrub forests
+36: Godavari-Krishna mangroves
+37: Aravalli west thorn scrub forests
+38: Thar desert
+39: Baluchistan xeric woodlands
+40: Indus River Delta-Arabian Sea mangroves
+41: South Western Ghats montane rain forests
+42: North Western Ghats montane rain forests
+43: South Western Ghats moist deciduous forests
+44: East Deccan moist deciduous forests
+45: Malabar Coast moist forests
+46: North Western Ghats moist deciduous forests
+47: Orissa semi-evergreen forests
+48: Upper Gangetic Plains moist deciduous forests
