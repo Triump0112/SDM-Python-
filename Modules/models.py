@@ -37,8 +37,8 @@ class Models:
 
 
         # Extract features
-        print(feature_cols)
-        print(presence_df.columns)
+        # print(feature_cols)
+        # print(presence_df.columns)
         presence_features = presence_df[feature_cols].values
         absence_features = absence_df[feature_cols].values
 
@@ -94,10 +94,10 @@ class Models:
         # for i, prob in enumerate(y_proba):
         #     print(f"Sample {i}: {prob:.4f}")
 
-        # Print feature importances
-        print("\nFeature Importances:")
-        for importance, feature in sorted(zip(clf.feature_importances_, feature_cols), reverse=True):
-            print(f"{feature}: {importance:.4f}")
+        # # Print feature importances
+        # print("\nFeature Importances:")
+        # for importance, feature in sorted(zip(clf.feature_importances_, feature_cols), reverse=True):
+        #     print(f"{feature}: {importance:.4f}")
 
         return clf, X_test, y_test, y_pred, y_proba
     
@@ -170,44 +170,31 @@ class Models:
         return clf, X_test, y_test, y_pred, y_proba
     
 
-    def evaluate_model(clf, X, y, dataset_name='Test'):
-        y_pred = clf.predict(X)
-        
+    def evaluate_model(clf: RandomForestClassifier, X_test, y_test, sample_weights=None, dataset_name='Test'):
+        # If sample_weights are provided, use them in the prediction step.
         try:
-            y_proba = clf.predict_proba(X)[:, 1]
-        except:
-            y_proba = None
-        
+            # If no sample_weights, just perform prediction directly
+            y_pred = clf.predict(X_test)
+
+   
+        except Exception as e:
+            print(f"Error during prediction: {e}")
+            return None
+
+        # If sample_weights are provided, calculate accuracy and metrics with them
         metrics = {
-            'accuracy': accuracy_score(y, y_pred),
-            'confusion_matrix': confusion_matrix(y, y_pred),
-            'classification_report': classification_report(y, y_pred)
+            'accuracy': accuracy_score(y_test, y_pred),
+            'confusion_matrix': confusion_matrix(y_test, y_pred),
+            'classification_report': classification_report(y_test, y_pred)
         }
         
+        # Print the results
         print(f"\n{dataset_name} Set Evaluation:")
         print(f"Accuracy: {metrics['accuracy']:.4f}")
-        
         print("\nConfusion Matrix:")
         print(metrics['confusion_matrix'])
-        
         print("\nClassification Report:")
         print(metrics['classification_report'])
         
-        # try:
-        #     feature_importances = sorted(
-        #         zip(clf.feature_importances_, feature_cols), 
-        #         reverse=True
-        #     )
-            
-        #     print("\nFeature Importances:")
-        #     for importance, feature in feature_importances:
-        #         print(f"{feature}: {importance:.4f}")
-            
-        #     metrics['feature_importances'] = feature_importances
-        # except AttributeError:
-        #     print("\nFeature importances not available for this model.")
-        
-        # if y_proba is not None:
-        #     metrics['probabilities'] = y_proba
-        
+        # Return the evaluation metrics
         return metrics
