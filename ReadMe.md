@@ -67,4 +67,4 @@ Users must provide the following inputs in the `Inputs` folder:
 - Then install all the required libraries, using pip install -r requirements.txt 
 - Then you will need to initialize a project on GEE, as we are using GEE API.
 - In the main function write the name of your project in ee.initialize(project={your project name})
-   
+            Thanks
