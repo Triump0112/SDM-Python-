@@ -1,7 +1,7 @@
 import ee 
 import pandas as pd
 import numpy as np
-from Modules import presence_dataloader, features_extractor, LULC_filter, pseudo_absence_generator, models, Generate_Prob
+from Modules import presence_dataloader, features_extractor, LULC_filter, pseudo_absence_generator, models, Generate_Prob, utility
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 ee.Authenticate()
 ee.Initialize(project='sigma-bay-425614-a6')
@@ -25,31 +25,41 @@ def main():
 
     # pseudo_absence_points_with_features = Pseudo_absence.generate_pseudo_absences(presence_data_with_features)
 
-    X, y, coords, feature_names,sample_weights = modelss.load_data()
-    clf, X_test, y_test, y_pred, y_proba = modelss.RandomForest(X,y)
-    X_test,y_test,_,_,_ = modelss.load_data(presence_path='data/presence_points_mangifera_south_deccan.csv',absence_path='data/absence_points_mangifera_south_deccan.csv')
+    # X, y, coords, feature_names,sample_weights = modelss.load_data()
+    # clf, X_test, y_test, y_pred, y_proba = modelss.RandomForest(X,y)
+    # X_test,y_test,_,_,_ = modelss.load_data(presence_path='data/presence_points_mangifera_south_deccan.csv',absence_path='data/absence_points_mangifera_south_deccan.csv')
 
-    y_pred = clf.predict(X_test)
-    metrics = {
-            'accuracy': accuracy_score(y_test, y_pred),
-            'confusion_matrix': confusion_matrix(y_test, y_pred),
-            'classification_report': classification_report(y_test, y_pred)
-        }
+    # y_pred = clf.predict(X_test)
+    # metrics = {
+    #         'accuracy': accuracy_score(y_test, y_pred),
+    #         'confusion_matrix': confusion_matrix(y_test, y_pred),
+    #         'classification_report': classification_report(y_test, y_pred)
+    #     }
         
-    # Print the results
+    # # Print the results
 
-    print(f"Accuracy: {metrics['accuracy']:.4f}")
-    print("\nConfusion Matrix:")
-    print(metrics['confusion_matrix'])
-    print("\nClassification Report:")
-    print(metrics['classification_report'])
-    print('done predicting')
+    # print(f"Accuracy: {metrics['accuracy']:.4f}")
+    # print("\nConfusion Matrix:")
+    # print(metrics['confusion_matrix'])
+    # print("\nClassification Report:")
+    # print(metrics['classification_report'])
+    # print('done predicting')
 
     # prob_map, transform = generate_prob.predict_eco_region(clf)
    
    
     # print(pseudo_absence_points_with_features.head(5))
     # pseudo_absence_points_with_features.to_csv('data/pseudo_absence.csv', index=False)
+
+    def test():
+        with open('Inputs/polygon.wkt','r') as polygon_file:
+            polygon = polygon_file.read().strip()
+
+        sampled_points = utility.divide_polygon_to_grids(polygon)
+        feature_vector = utility.representative_feature_vector_for_polygon(sampled_points,ee)
+        print(feature_vector)
+
+    test()
     
    
 
