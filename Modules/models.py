@@ -24,9 +24,9 @@ feature_cols = [
 class Models:
     def __init__(self):
         return 
-    def load_data(self):
-        presence_df = pd.read_csv('data/presence.csv')
-        absence_df = pd.read_csv('data/pseudo_absence.csv')
+    def load_data(self,presence_path = 'data/presence.csv' ,absence_path='data/pseudo_absence.csv'):
+        presence_df = pd.read_csv(presence_path)
+        absence_df = pd.read_csv(absence_path)
 
 
         # Extract coordinates and features
@@ -168,3 +168,46 @@ class Models:
             print(f"{feature}: {coef:.4f}")
 
         return clf, X_test, y_test, y_pred, y_proba
+    
+
+    def evaluate_model(clf, X, y, dataset_name='Test'):
+        y_pred = clf.predict(X)
+        
+        try:
+            y_proba = clf.predict_proba(X)[:, 1]
+        except:
+            y_proba = None
+        
+        metrics = {
+            'accuracy': accuracy_score(y, y_pred),
+            'confusion_matrix': confusion_matrix(y, y_pred),
+            'classification_report': classification_report(y, y_pred)
+        }
+        
+        print(f"\n{dataset_name} Set Evaluation:")
+        print(f"Accuracy: {metrics['accuracy']:.4f}")
+        
+        print("\nConfusion Matrix:")
+        print(metrics['confusion_matrix'])
+        
+        print("\nClassification Report:")
+        print(metrics['classification_report'])
+        
+        # try:
+        #     feature_importances = sorted(
+        #         zip(clf.feature_importances_, feature_cols), 
+        #         reverse=True
+        #     )
+            
+        #     print("\nFeature Importances:")
+        #     for importance, feature in feature_importances:
+        #         print(f"{feature}: {importance:.4f}")
+            
+        #     metrics['feature_importances'] = feature_importances
+        # except AttributeError:
+        #     print("\nFeature importances not available for this model.")
+        
+        # if y_proba is not None:
+        #     metrics['probabilities'] = y_proba
+        
+        return metrics
