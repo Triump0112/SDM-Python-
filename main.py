@@ -51,15 +51,15 @@ def main():
     # print(pseudo_absence_points_with_features.head(5))
     # pseudo_absence_points_with_features.to_csv('data/pseudo_absence.csv', index=False)
 
-    # def test():
-    #     with open('Inputs/polygon.wkt','r') as polygon_file:
-    #         polygon = polygon_file.read().strip()
+    def test():
+        with open('Inputs/polygon.wkt','r') as polygon_file:
+            polygon = polygon_file.read().strip()
 
-    #     sampled_points = utility.divide_polygon_to_grids(polygon)
-    #     feature_vector = utility.representative_feature_vector_for_polygon(sampled_points,ee)
-    #     print(feature_vector)
+        sampled_points = utility.divide_polygon_to_grids(polygon)
+        feature_vector = utility.representative_feature_vector_for_polygon(sampled_points,ee)
+        print(feature_vector)
 
-    # test()
+    test()
     return 
     
    

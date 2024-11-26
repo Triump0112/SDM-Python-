@@ -49,10 +49,18 @@ def divide_polygon_to_grids(polygon, grid_size=10, points_per_cell=10):
     return sampled_points
 
 
-def representative_feature_vector_for_polygon(sampled_points,ee):
-    # print('no. of points sampled',sampled_points)
+def representative_feature_vector_for_polygon(sampled_points, ee):
+
     feature_Extractor = features_extractor.Feature_Extractor(ee)
-    return feature_Extractor.add_features(sampled_points)
+    
+
+    features_df = feature_Extractor.add_features(sampled_points)
+    
+
+    feature_vector = features_df.mean(axis=0, skipna=True).tolist()
+    feature_vector=feature_vector[2:]
+    return feature_vector
+
 
 
 
