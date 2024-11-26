@@ -5,12 +5,13 @@ import random
 import pandas as pd 
 
 
-def divide_polygon_to_grids(polygon,grid_size=10,points_per_cell=5):
+def divide_polygon_to_grids(polygon, grid_size=10, points_per_cell=10):
     polygon = loads(polygon)
     min_x, min_y, max_x, max_y = polygon.bounds
     step_x = (max_x - min_x) / grid_size
     step_y = (max_y - min_y) / grid_size
     sampled_points = []
+    total= 0
     for i in range(grid_size):
         for j in range(grid_size):
             # Define the current grid cell as a polygon
@@ -34,12 +35,22 @@ def divide_polygon_to_grids(polygon,grid_size=10,points_per_cell=5):
                     # Check if the point lies within the intersection
                     if intersection.contains(point):
                         points_in_cell.append(point)
+                total+=len(points_in_cell)
+                # print(total)
                 sampled_points.extend(points_in_cell)
-    sampled_points = pd.DataFrame(sampled_points,columns=["longitude", "latitude"])
+
+    # Convert points to a list of [longitude, latitude] pairs
+    # print('points sampled',total)
+    sampled_points = [[point.x, point.y] for point in sampled_points]
+
+    # Now create the DataFrame with correct shape (longitude, latitude)
+    sampled_points = pd.DataFrame(sampled_points, columns=["longitude", "latitude"])
 
     return sampled_points
 
+
 def representative_feature_vector_for_polygon(sampled_points,ee):
+    # print('no. of points sampled',sampled_points)
     feature_Extractor = features_extractor.Feature_Extractor(ee)
     return feature_Extractor.add_features(sampled_points)
 
