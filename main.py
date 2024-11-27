@@ -54,43 +54,50 @@ def main():
     # feature_vectors_df = utility.find_representive_vectors_from_files('data/eco_regions_polygon', ee)
     
     # Step 2: Calculate similarity matrices
-    feature_vectors_df = pd.read_csv('data/representative_vectors_eco_region_wise.csv', index_col=0)
-    cosine_similarity_matrix = utility.calculate_cosine_similarity_matrix(feature_vectors_df)
-    euclidean_similarity_matrix = utility.calculate_euclidean_similarity_matrix(feature_vectors_df)
+    # feature_vectors_df = pd.read_csv('data/representative_vectors_eco_region_wise.csv', index_col=0)
+    # cosine_similarity_matrix = utility.calculate_cosine_similarity_matrix(feature_vectors_df)
+    # euclidean_similarity_matrix = utility.calculate_euclidean_similarity_matrix(feature_vectors_df)
     
-    row_labels = feature_vectors_df.index.tolist()
+    # row_labels = feature_vectors_df.index.tolist()
     
-    # Print results
-    print("Cosine Similarity Matrix:")
-    cosine_df = pd.DataFrame(
-        cosine_similarity_matrix, 
-        index=row_labels, 
-        columns=row_labels
-    )
-    print(cosine_df)
+    # # Print results
+    # print("Cosine Similarity Matrix:")
+    # cosine_df = pd.DataFrame(
+    #     cosine_similarity_matrix, 
+    #     index=row_labels, 
+    #     columns=row_labels
+    # )
+    # print(cosine_df)
     
-    print("\nEuclidean Similarity Matrix:")
-    euclidean_df = pd.DataFrame(
-        euclidean_similarity_matrix, 
-        index=row_labels, 
-        columns=row_labels
-    )
-    print(euclidean_df)
+    # print("\nEuclidean Similarity Matrix:")
+    # euclidean_df = pd.DataFrame(
+    #     euclidean_similarity_matrix, 
+    #     index=row_labels, 
+    #     columns=row_labels
+    # )
+    # print(euclidean_df)
     
-    # Save matrices to text files
-    utility.save_matrix_to_text(
-        cosine_similarity_matrix, 
-        'data/cosine_similarity_matrix.txt', 
-        row_labels
-    )
-    utility.save_matrix_to_text(
-        euclidean_similarity_matrix, 
-        'data/euclidean_similarity_matrix.txt', 
-        row_labels
-    )
+    # # Save matrices to text files
+    # utility.save_matrix_to_text(
+    #     cosine_similarity_matrix, 
+    #     'data/cosine_similarity_matrix.txt', 
+    #     row_labels
+    # )
+    # utility.save_matrix_to_text(
+    #     euclidean_similarity_matrix, 
+    #     'data/euclidean_similarity_matrix.txt', 
+    #     row_labels
+
+
+    # )
+
+    # Example usage:
+    input_file = "data/eco_region_wise_genus.csv"  # Replace with your cleaned input file path
+    utility.jaccard_similarity(input_file)
 
 
     return 
+
     
    
 

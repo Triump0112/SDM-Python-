@@ -4,6 +4,9 @@ from shapely.wkt import loads
 import random
 import pandas as pd 
 from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
+import pandas as pd
+import numpy as np
+import Levenshtein
 import os 
 
 
@@ -109,6 +112,85 @@ def calculate_euclidean_similarity_matrix(feature_vectors_df):
     distance_matrix = euclidean_distances(feature_vectors_df)
     similarity_matrix = 1 / (1 + distance_matrix)  # Add 1 to avoid division by zero and make it a similarity measure
     return similarity_matrix
+
+
+
+def jaccard_similarity(input_file, similarity_threshold=0.8):
+    # Read the CSV file containing eco-regions and genera
+    df = pd.read_csv(input_file)
+    print(df.columns)
+    
+    # Function to check if two genus names are similar based on Levenshtein distance
+    def are_genus_similar(genus1, genus2, threshold):
+        # Convert genus names to lowercase before comparing
+        genus1 = genus1.lower() if isinstance(genus1, str) else ""
+        genus2 = genus2.lower() if isinstance(genus2, str) else ""
+        
+        # Calculate Levenshtein distance and convert it to a similarity score
+        if pd.isna(genus1) or pd.isna(genus2):  # Handle missing values
+            return False
+        
+        lev_distance = Levenshtein.distance(genus1, genus2)
+        max_len = max(len(genus1), len(genus2))
+        similarity = 1 - lev_distance / max_len
+        return similarity >= threshold
+    
+    # Create a dictionary to store the genus sets for each eco-region
+    eco_region_genus = {}
+
+    # Populate the dictionary with eco-region and associated genera
+    for _, row in df.iterrows():
+        eco_region = row["Eco-region"]
+        genus_list = row["Genus List"].split(", ")
+        
+        # Merge similar genus names
+        merged_genus_list = []
+        for genus in genus_list:
+            # Add genus to the list if it is not a close match with any already present genus
+            to_add = True
+            for existing_genus in merged_genus_list:
+                if are_genus_similar(genus, existing_genus, similarity_threshold):
+                    to_add = False
+                    break
+            if to_add:
+                merged_genus_list.append(genus)
+        
+        eco_region_genus[eco_region] = set(merged_genus_list)
+
+    # Extract the eco-regions and initialize an empty matrix for similarities
+    eco_regions = list(eco_region_genus.keys())
+    similarity_matrix = np.zeros((len(eco_regions), len(eco_regions)))
+
+    # Create a dictionary to map indices to eco-region names
+    eco_region_index_map = {i: eco_region for i, eco_region in enumerate(eco_regions)}
+
+    # Calculate the Jaccard similarity for each pair of eco-regions
+    for i in range(len(eco_regions)):
+        for j in range(i, len(eco_regions)):  # We only need to calculate once for each pair
+            eco_region_i = eco_regions[i]
+            eco_region_j = eco_regions[j]
+            
+            # Calculate the intersection and union of genus sets
+            intersection = len(eco_region_genus[eco_region_i].intersection(eco_region_genus[eco_region_j]))
+            union = len(eco_region_genus[eco_region_i].union(eco_region_genus[eco_region_j]))
+            
+            # Jaccard similarity
+            similarity = intersection / union if union != 0 else 0
+            
+            # Fill the matrix with the calculated similarity
+            similarity_matrix[i, j] = similarity
+            similarity_matrix[j, i] = similarity  # Symmetric matrix
+
+  
+    
+    # Save the resulting similarity matrix to a CSV file
+    save_matrix_to_text(similarity_matrix, "outputs/jaccard_similarity_matrix.txt", eco_regions)
+
+    print("Jaccard Similarity Matrix has been calculated and saved to 'jaccard_similarity_matrix.csv'.")
+   
+
+
+
 
 
 
