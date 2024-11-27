@@ -32,6 +32,7 @@ class Feature_Extractor():
 
 
 
+
     def load_assets(self):
         # Load the ecoregions dataset
         ee = self.ee 
@@ -169,7 +170,7 @@ class Feature_Extractor():
                 min_info = band.reduceRegion(
                     reducer=ee.Reducer.min(),
                     geometry=region,
-                    scale=1000,
+                    scale=200,
                     maxPixels=1e13
                 ).getInfo()
                 min_value = min_info.get(bio_code, float('nan'))
@@ -178,7 +179,7 @@ class Feature_Extractor():
                 max_info = band.reduceRegion(
                     reducer=ee.Reducer.max(),
                     geometry=region,
-                    scale=1000,
+                    scale=200,
                     maxPixels=1e13
                 ).getInfo()
                 max_value = max_info.get(bio_code, float('nan'))
@@ -205,7 +206,7 @@ class Feature_Extractor():
                 min_info = asset.reduceRegion(
                     reducer=ee.Reducer.min(),
                     geometry=region,
-                    scale=1000,
+                    scale=500,
                     maxPixels=1e13
                 ).getInfo()
                 min_value = min_info.get('b1' if asset_name != 'elevation' else 'elevation', float('nan'))
@@ -214,7 +215,7 @@ class Feature_Extractor():
                 max_info = asset.reduceRegion(
                     reducer=ee.Reducer.max(),
                     geometry=region,
-                    scale=1000,
+                    scale=500,
                     maxPixels=1e13
                 ).getInfo()
                 max_value = max_info.get('b1' if asset_name != 'elevation' else 'elevation', float('nan'))
@@ -229,6 +230,11 @@ class Feature_Extractor():
     
     def normalize_bioclim_values(self,values_dict):
         min_max_dict = self.min_max_values
+        for key in min_max_dict:
+            min_max_dict[key]['min'] = min(min_max_dict[key]['min'],values_dict[key])
+            min_max_dict[key]['max'] = max(min_max_dict[key]['max'],values_dict[key])
+        self.min_max_values = min_max_dict
+        
         normalized = {}
         cnt=0
         Norm_Max = 1

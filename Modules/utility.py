@@ -1,4 +1,5 @@
 from . import features_extractor 
+import geopandas as gpd
 from shapely.geometry import Point, Polygon, box
 from shapely.wkt import loads
 import random
@@ -11,6 +12,7 @@ import os
 
 
 def divide_polygon_to_grids(polygon, grid_size=10, points_per_cell=5):
+    
     polygon = loads(polygon)
     min_x, min_y, max_x, max_y = polygon.bounds
     step_x = (max_x - min_x) / grid_size
