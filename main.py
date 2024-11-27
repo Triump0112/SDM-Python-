@@ -51,15 +51,45 @@ def main():
     # print(pseudo_absence_points_with_features.head(5))
     # pseudo_absence_points_with_features.to_csv('data/pseudo_absence.csv', index=False)
 
-    def test():
-        with open('Inputs/polygon.wkt','r') as polygon_file:
-            polygon = polygon_file.read().strip()
+    # feature_vectors_df = utility.find_representive_vectors_from_files('data/eco_regions_polygon', ee)
+    
+    # Step 2: Calculate similarity matrices
+    feature_vectors_df = pd.read_csv('data/representative_vectors_eco_region_wise.csv', index_col=0)
+    cosine_similarity_matrix = utility.calculate_cosine_similarity_matrix(feature_vectors_df)
+    euclidean_similarity_matrix = utility.calculate_euclidean_similarity_matrix(feature_vectors_df)
+    
+    row_labels = feature_vectors_df.index.tolist()
+    
+    # Print results
+    print("Cosine Similarity Matrix:")
+    cosine_df = pd.DataFrame(
+        cosine_similarity_matrix, 
+        index=row_labels, 
+        columns=row_labels
+    )
+    print(cosine_df)
+    
+    print("\nEuclidean Similarity Matrix:")
+    euclidean_df = pd.DataFrame(
+        euclidean_similarity_matrix, 
+        index=row_labels, 
+        columns=row_labels
+    )
+    print(euclidean_df)
+    
+    # Save matrices to text files
+    utility.save_matrix_to_text(
+        cosine_similarity_matrix, 
+        'data/cosine_similarity_matrix.txt', 
+        row_labels
+    )
+    utility.save_matrix_to_text(
+        euclidean_similarity_matrix, 
+        'data/euclidean_similarity_matrix.txt', 
+        row_labels
+    )
 
-        sampled_points = utility.divide_polygon_to_grids(polygon)
-        feature_vector = utility.representative_feature_vector_for_polygon(sampled_points,ee)
-        print(feature_vector)
 
-    test()
     return 
     
    

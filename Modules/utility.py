@@ -3,9 +3,11 @@ from shapely.geometry import Point, Polygon, box
 from shapely.wkt import loads
 import random
 import pandas as pd 
+from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
+import os 
 
 
-def divide_polygon_to_grids(polygon, grid_size=10, points_per_cell=10):
+def divide_polygon_to_grids(polygon, grid_size=10, points_per_cell=5):
     polygon = loads(polygon)
     min_x, min_y, max_x, max_y = polygon.bounds
     step_x = (max_x - min_x) / grid_size
@@ -61,13 +63,77 @@ def representative_feature_vector_for_polygon(sampled_points, ee):
     feature_vector=feature_vector[2:]
     return feature_vector
 
+def find_representive_vectors_from_files(input_folder, ee):
+    feature_vectors = []
+    file_names = []
+    
+    # Iterate over all WKT files in the given folder
+    for filename in os.listdir(input_folder):
+        if filename.endswith('.wkt'):
+            print('processing',filename)
+            with open(os.path.join(input_folder, filename), 'r') as file:
+                polygon_wkt = file.read().strip()
+                
+            # Ensure the polygon_wkt is in string format (WKT format), not a Polygon object
+            if isinstance(polygon_wkt, str):
+                # Now, correctly load the WKT string into a Polygon object
+                polygon = polygon_wkt
+                
+                # Generate sampled points from the polygon
+                sampled_points = divide_polygon_to_grids(polygon, grid_size=10, points_per_cell=10)
+                
+                # Generate the representative feature vector for the polygon
+                feature_vector = representative_feature_vector_for_polygon(sampled_points, ee)
+                
+                # Store the vector and corresponding file name (for identification)
+                feature_vectors.append(feature_vector)
+                file_names.append(filename)
+            else:
+                print(f"Skipping {filename} because it is not a valid WKT string.")
+    
+    # Convert feature vectors into a DataFrame
+    feature_vectors_df = pd.DataFrame(feature_vectors)
+    feature_vectors_df.index = file_names  # Use file names as the index
+    feature_vectors_df.to_csv('data/representative_vectors_eco_region_wise.csv')
+    
+    return feature_vectors_df
+
+
+def calculate_cosine_similarity_matrix(feature_vectors_df):
+    similarity_matrix = cosine_similarity(feature_vectors_df)
+    return similarity_matrix
+
+# Function to calculate Euclidean Distance similarity matrix
+def calculate_euclidean_similarity_matrix(feature_vectors_df):
+    # Euclidean distance is often interpreted as the inverse of the distance (the smaller the distance, the higher the similarity)
+    distance_matrix = euclidean_distances(feature_vectors_df)
+    similarity_matrix = 1 / (1 + distance_matrix)  # Add 1 to avoid division by zero and make it a similarity measure
+    return similarity_matrix
 
 
 
 
 
-def create_similarity_matrix():
-    SM=[[0 for _ in range(49)] for _ in range(49)]
-    return SM 
+
+def save_matrix_to_text(matrix, filename, labels):
+    """
+    Save matrix to a human-readable text file with row and column labels.
+    
+    Parameters:
+    matrix (np.ndarray): Similarity matrix to save
+    filename (str): Output filename
+    labels (list): Row and column labels
+    """
+    with open(filename, 'w') as f:
+        # Write column headers
+        f.write(' ' * 50)  # Indent for row labels
+        f.write('\t'.join(labels) + '\n')
+        
+        # Write matrix with row labels
+        for i, row_label in enumerate(labels):
+            # Format row with row label and values
+            row_values = [f"{val:.4f}" for val in matrix[i]]
+            formatted_row = f"{row_label:<50}\t" + '\t'.join(row_values) + '\n'
+            f.write(formatted_row)
 
 
