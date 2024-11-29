@@ -170,7 +170,7 @@ class Feature_Extractor():
                 min_info = band.reduceRegion(
                     reducer=ee.Reducer.min(),
                     geometry=region,
-                    scale=200,
+                    scale=500,
                     maxPixels=1e13
                 ).getInfo()
                 min_value = min_info.get(bio_code, float('nan'))
@@ -179,7 +179,7 @@ class Feature_Extractor():
                 max_info = band.reduceRegion(
                     reducer=ee.Reducer.max(),
                     geometry=region,
-                    scale=200,
+                    scale=500,
                     maxPixels=1e13
                 ).getInfo()
                 max_value = max_info.get(bio_code, float('nan'))
@@ -231,8 +231,9 @@ class Feature_Extractor():
     def normalize_bioclim_values(self,values_dict):
         min_max_dict = self.min_max_values
         for key in min_max_dict:
-            min_max_dict[key]['min'] = min(min_max_dict[key]['min'],values_dict[key])
-            min_max_dict[key]['max'] = max(min_max_dict[key]['max'],values_dict[key])
+            if min_max_dict[key]['min'] is not None and min_max_dict[key]['max'] is not None and values_dict[key] is not None:
+                min_max_dict[key]['min'] = min(min_max_dict[key]['min'],values_dict[key])
+                min_max_dict[key]['max'] = max(min_max_dict[key]['max'],values_dict[key])
         self.min_max_values = min_max_dict
         
         normalized = {}

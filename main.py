@@ -19,16 +19,16 @@ def main():
     
     # # raw_occurrences = Presence_dataloader.load_raw_presence_data()   #uncomment if want to use gbif api to generate presence points
     
-    unique_presences = Presence_dataloader.load_unique_lon_lats()
-    presences_filtered_LULC = LULC_Filter.filter_by_lulc(unique_presences)
-    presence_data_with_features  = Features_extractor.add_features(presences_filtered_LULC)
-    presence_data_with_features.to_csv('data/presence.csv',index=False,mode='w')
+    # unique_presences = Presence_dataloader.load_unique_lon_lats()
+    # presences_filtered_LULC = LULC_Filter.filter_by_lulc(unique_presences)
+    # presence_data_with_features  = Features_extractor.add_features(presences_filtered_LULC)
+    # presence_data_with_features.to_csv('data/presence.csv',index=False,mode='w')
 
-    pseudo_absence_points_with_features = Pseudo_absence.generate_pseudo_absences(presence_data_with_features)
-    print('training model')
-    X,y,_,_,_ = modelss.load_data()
-    clf, X_test, y_test, y_pred, y_proba = modelss.RandomForest(X,y)
-    print('done training')
+    # pseudo_absence_points_with_features = Pseudo_absence.generate_pseudo_absences(presence_data_with_features)
+    # print('training model')
+    # X,y,_,_,_ = modelss.load_data()
+    # clf, X_test, y_test, y_pred, y_proba = modelss.RandomForest(X,y)
+    # print('done training')
     
 
     # y_pred = clf.predict(X_test)
@@ -53,14 +53,14 @@ def main():
     # print(pseudo_absence_points_with_features.head(5))
     # pseudo_absence_points_with_features.to_csv('data/pseudo_absence.csv', index=False)
 
-    # feature_vectors_df = utility.find_representive_vectors_from_files('data/eco_regions_polygon', ee)
+    feature_vectors_df = utility.find_representive_vectors_from_files('data/eco_regions_polygon', ee)
     
     # Step 2: Calculate similarity matrices
-    # feature_vectors_df = pd.read_csv('data/representative_vectors_eco_region_wise.csv', index_col=0)
-    # cosine_similarity_matrix = utility.calculate_cosine_similarity_matrix(feature_vectors_df)
-    # euclidean_similarity_matrix = utility.calculate_euclidean_similarity_matrix(feature_vectors_df)
+    feature_vectors_df = pd.read_csv('data/representative_vectors_eco_region_wise.csv', index_col=0)
+    cosine_similarity_matrix = utility.calculate_cosine_similarity_matrix(feature_vectors_df)
+    euclidean_similarity_matrix = utility.calculate_euclidean_similarity_matrix(feature_vectors_df)
     
-    # row_labels = feature_vectors_df.index.tolist()
+    row_labels = feature_vectors_df.index.tolist()
     
     # # Print results
     # print("Cosine Similarity Matrix:")
@@ -80,47 +80,47 @@ def main():
     # print(euclidean_df)
     
     # # Save matrices to text files
-    # utility.save_matrix_to_text(
-    #     cosine_similarity_matrix, 
-    #     'data/cosine_similarity_matrix.txt', 
-    #     row_labels
-    # )
-    # utility.save_matrix_to_text(
-    #     euclidean_similarity_matrix, 
-    #     'data/euclidean_similarity_matrix.txt', 
-    #     row_labels
+    utility.save_matrix_to_text(
+        cosine_similarity_matrix, 
+        'data/cosine_similarity_matrix.txt', 
+        row_labels
+    )
+    utility.save_matrix_to_text(
+        euclidean_similarity_matrix, 
+        'data/euclidean_similarity_matrix.txt', 
+        row_labels
 
 
-    # )
+    )
 
     # Example usage:
     # input_file = "data/eco_region_wise_genus.csv"  # Replace with your cleaned input file path
     # utility.jaccard_similarity(input_file)
-    with open('data/eco_regions_polygon/Terai_Duar_savanna_and_grasslands.wkt', 'r') as file:
-        polygon_wkt1 = file.read().strip()
-        # print(polygon_wkt)
+    # with open('data/eco_regions_polygon/Terai_Duar_savanna_and_grasslands.wkt', 'r') as file:
+    #     polygon_wkt1 = file.read().strip()
+    #     # print(polygon_wkt)
     
-    with open('data/eco_regions_polygon/Northwestern_Himalayan_alpine_shrub_and_meadows.wkt', 'r') as file:
-        polygon_wkt2 = file.read().strip()
+    # with open('data/eco_regions_polygon/Northwestern_Himalayan_alpine_shrub_and_meadows.wkt', 'r') as file:
+    #     polygon_wkt2 = file.read().strip()
 
-    X_dissimilar = Features_extractor.add_features(utility.divide_polygon_to_grids(polygon_wkt1,grid_size=1,points_per_cell=20))
-    pd.DataFrame.to_csv(X_dissimilar,'data/test_presence.csv')
-    X_test,y_test,_,_,_ = modelss.load_data(presence_path='data/test_presence.csv',absence_path='data/test_absence.csv')
+    # X_dissimilar = Features_extractor.add_features(utility.divide_polygon_to_grids(polygon_wkt1,grid_size=1,points_per_cell=20))
+    # pd.DataFrame.to_csv(X_dissimilar,'data/test_presence.csv')
+    # X_test,y_test,_,_,_ = modelss.load_data(presence_path='data/test_presence.csv',absence_path='data/test_absence.csv')
 
-    print('predicting for a dissimilar reogionnn')
-    y_pred = clf.predict(X_test)
-    y_proba = clf.predict_proba(X_test)[:, 1]
+    # print('predicting for a dissimilar reogionnn')
+    # y_pred = clf.predict(X_test)
+    # y_proba = clf.predict_proba(X_test)[:, 1]
 
-    print(f"Accuracy_RFC: {accuracy_score(y_test, y_pred):.4f}")
-    print("\nConfusion Matrix:")
-    print(confusion_matrix(y_test, y_pred))
-    print("\nClassification Report:")
-    print(classification_report(y_test, y_pred))
+    # print(f"Accuracy_RFC: {accuracy_score(y_test, y_pred):.4f}")
+    # print("\nConfusion Matrix:")
+    # print(confusion_matrix(y_test, y_pred))
+    # print("\nClassification Report:")
+    # print(classification_report(y_test, y_pred))
 
 
-    print("\nProbabilities on the test set:")
-    for i, prob in enumerate(y_proba):
-        print(f"Sample {i}: {prob:.4f}")
+    # print("\nProbabilities on the test set:")
+    # for i, prob in enumerate(y_proba):
+    #     print(f"Sample {i}: {prob:.4f}")
 
 
     # X_similar = Features_extractor.add_features(utility.divide_polygon_to_grids(polygon_wkt2,grid_size=1,points_per_cell=20))
