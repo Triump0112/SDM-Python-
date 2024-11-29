@@ -9,10 +9,10 @@ ee.Initialize(project='sigma-bay-425614-a6')
 
 def main():
   
-    Presence_dataloader = presence_dataloader.Presence_dataloader()
-    Features_extractor = features_extractor.Feature_Extractor(ee)
-    LULC_Filter = LULC_filter.LULC_Filter(ee)
-    Pseudo_absence = pseudo_absence_generator.PseudoAbsences(ee)
+    # Presence_dataloader = presence_dataloader.Presence_dataloader()
+    # Features_extractor = features_extractor.Feature_Extractor(ee)
+    # LULC_Filter = LULC_filter.LULC_Filter(ee)
+    # Pseudo_absence = pseudo_absence_generator.PseudoAbsences(ee)
     modelss = models.Models()
     # generate_prob = Generate_Prob.Generate_Prob(ee)
     
@@ -53,14 +53,14 @@ def main():
     # print(pseudo_absence_points_with_features.head(5))
     # pseudo_absence_points_with_features.to_csv('data/pseudo_absence.csv', index=False)
 
-    feature_vectors_df = utility.find_representive_vectors_from_files('data/eco_regions_polygon', ee)
+    # feature_vectors_df = utility.find_representive_vectors_from_files('data/eco_regions_polygon', ee)
     
-    # Step 2: Calculate similarity matrices
-    feature_vectors_df = pd.read_csv('data/representative_vectors_eco_region_wise.csv', index_col=0)
-    cosine_similarity_matrix = utility.calculate_cosine_similarity_matrix(feature_vectors_df)
-    euclidean_similarity_matrix = utility.calculate_euclidean_similarity_matrix(feature_vectors_df)
+    # # Step 2: Calculate similarity matrices
+    # feature_vectors_df = pd.read_csv('data/representative_vectors_eco_region_wise.csv', index_col=0)
+    # cosine_similarity_matrix = utility.calculate_cosine_similarity_matrix(feature_vectors_df)
+    # euclidean_similarity_matrix = utility.calculate_euclidean_similarity_matrix(feature_vectors_df)
     
-    row_labels = feature_vectors_df.index.tolist()
+    # row_labels = feature_vectors_df.index.tolist()
     
     # # Print results
     # print("Cosine Similarity Matrix:")
