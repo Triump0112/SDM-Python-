@@ -25,29 +25,53 @@ def main():
     # presence_data_with_features.to_csv('data/presence.csv',index=False,mode='w')
 
     # pseudo_absence_points_with_features = Pseudo_absence.generate_pseudo_absences(presence_data_with_features)
-    # print('training model')
-    # X,y,_,_,_ = modelss.load_data()
-    # clf, X_test, y_test, y_pred, y_proba = modelss.RandomForest(X,y)
-    # print('done training')
+    print('training model')
+    X,y,_,_,_ = modelss.load_data()
+    clf, X_test, y_test, y_pred, y_proba = modelss.RandomForest(X,y)
+    avg=0
+    for i, prob in enumerate(y_proba):
+        print(f"training test split Sample {i}: {prob:.4f}")
+        avg+=prob 
+    avg /= len(y_proba)
+
+
+    print('done training with avg prob',avg)
     
 
-    # y_pred = clf.predict(X_test)
-    # metrics = {
-    #         'accuracy': accuracy_score(y_test, y_pred),
-    #         'confusion_matrix': confusion_matrix(y_test, y_pred),
-    #         'classification_report': classification_report(y_test, y_pred)
-    #     }
+    
+    print('begining predicting on similar region.....')
+
+   
+
+    X_test,y_test,_,_,_ = modelss.load_data(presence_path='data/test_presence.csv',absence_path='data/test_absence.csv')
+    
+    print('testing data loaded')
+
+    y_pred = clf.predict(X_test)
+    y_proba = clf.predict_proba(X_test)[:, 1]
+    print('prediction stored')
+    metrics = {
+            'accuracy': accuracy_score(y_test, y_pred),
+            'confusion_matrix': confusion_matrix(y_test, y_pred),
+            'classification_report': classification_report(y_test, y_pred)
+        }
         
-    # # Print the results
+    # Print the results
 
-    # print(f"Accuracy: {metrics['accuracy']:.4f}")
-    # print("\nConfusion Matrix:")
-    # print(metrics['confusion_matrix'])
-    # print("\nClassification Report:")
-    # print(metrics['classification_report'])
-    # print('done predicting')
+    print(f"Accuracy: {metrics['accuracy']:.4f}")
+    print("\nConfusion Matrix:")
+    print(metrics['confusion_matrix'])
+    print("\nClassification Report:")
+    print(metrics['classification_report'])
+    print('done predicting')
+    avg=0
+    for i, prob in enumerate(y_proba):
+        print(f"Sample {i}: {prob:.4f}")
+        avg+=prob 
+    avg/=71
+    print('avg prob is',avg)
 
-    # prob_map, transform = generate_prob.predict_eco_region(clf)
+    # Print feature importances (Coefficients)
    
    
     # print(pseudo_absence_points_with_features.head(5))
@@ -80,18 +104,18 @@ def main():
     # print(euclidean_df)
     
     # # Save matrices to text files
-    utility.save_matrix_to_text(
-        cosine_similarity_matrix, 
-        'data/cosine_similarity_matrix.txt', 
-        row_labels
-    )
-    utility.save_matrix_to_text(
-        euclidean_similarity_matrix, 
-        'data/euclidean_similarity_matrix.txt', 
-        row_labels
+    # utility.save_matrix_to_text(
+    #     cosine_similarity_matrix, 
+    #     'data/cosine_similarity_matrix.txt', 
+    #     row_labels
+    # )
+    # utility.save_matrix_to_text(
+    #     euclidean_similarity_matrix, 
+    #     'data/euclidean_similarity_matrix.txt', 
+    #     row_labels
 
 
-    )
+    # )
 
     # Example usage:
     # input_file = "data/eco_region_wise_genus.csv"  # Replace with your cleaned input file path
@@ -100,7 +124,7 @@ def main():
     #     polygon_wkt1 = file.read().strip()
     #     # print(polygon_wkt)
     
-    # with open('data/eco_regions_polygon/Northwestern_Himalayan_alpine_shrub_and_meadows.wkt', 'r') as file:
+    # with open('data/eco_regions_polygon/South_Western_Ghats_moist_deciduous_forests.wkt', 'r') as file:
     #     polygon_wkt2 = file.read().strip()
 
     # X_dissimilar = Features_extractor.add_features(utility.divide_polygon_to_grids(polygon_wkt1,grid_size=1,points_per_cell=20))
@@ -123,9 +147,11 @@ def main():
     #     print(f"Sample {i}: {prob:.4f}")
 
 
-    # X_similar = Features_extractor.add_features(utility.divide_polygon_to_grids(polygon_wkt2,grid_size=1,points_per_cell=20))
+    # X_dissimilar = Features_extractor.add_features(utility.divide_polygon_to_grids(polygon_wkt2,grid_size=12,points_per_cell=1))
     # print(X_dissimilar)
-    # print(X_similar)
+    # # print(X_similar)
+    # pd.DataFrame.to_csv(X_dissimilar,'data/test_presence.csv',index=False)
+
 
 
 

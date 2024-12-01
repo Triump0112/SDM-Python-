@@ -29,9 +29,12 @@ class Models:
         absence_df = pd.read_csv(absence_path)
 
 
-        # Extract coordinates and features
+       
+
         presence_coords = presence_df[['longitude', 'latitude']].values
+
         absence_coords = absence_df[['longitude', 'latitude']].values
+        
 
         # Get feature columns (bio01 through bio19)
 
@@ -54,8 +57,10 @@ class Models:
         reliability = absence_df['reliability'].values
         min_reliability = np.min(reliability)
         max_reliability = np.max(reliability)
-
-        absence_weights = ((reliability - min_reliability) / (max_reliability - min_reliability))
+        if max_reliability!=min_reliability:
+            absence_weights = ((reliability - min_reliability) / (max_reliability - min_reliability))
+        else:
+            absence_weights = [1 for i in range(len(reliability))]
         absence_weights = [i**(0.1) for i in absence_weights]
 
         # Combine presence and absence weights
